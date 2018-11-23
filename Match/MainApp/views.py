@@ -14,7 +14,8 @@ def log(req):
         email = req.GET['email']
         pwd = req.GET['pwd']
 
-        user = User.objects.filter(email=email, password=pwd).values('firstName', 'lastName', 'age', 'dob', 'gender', 'email', 'profilePic', 'hobbies')
+        user = User.objects.filter(email=email, password=pwd)
+        # .values('firstName', 'lastName', 'age', 'dob', 'gender', 'email', 'profilePic', 'hobbies')
         print(user)
 
         return render(req, 'MainApp/profile.html', {"user": user[0]})
