@@ -12,13 +12,12 @@ def index(req):
 def log(req):
     if req.method == 'GET':
         email = req.GET['email']
-        pwd = req.GET['password']
+        pwd = req.GET['pwd']
 
         user = User.objects.filter(email=email, password=pwd).values('firstName', 'lastName', 'age', 'dob', 'gender', 'email', 'profilePic', 'hobbies')
-
         print(user)
 
-        return redirect('userProfile', user=user)
+        return render(req, 'MainApp/profile.html', {"user": user[0]})
 
 @csrf_exempt
 def register(req):
@@ -45,7 +44,7 @@ def newUser(req):
         #creating a new user to be saved into the DB
         user = User(firstName=firstName, lastName=lastName, age=age, dob=dob, gender=gender, email=email, password=password, profilePic=profilePic)
         user.save()
-        
+
         #adding hobbies to user
         for hobbyName in hobbies:
             hobby = Hobby.objects.get(pk=hobbyName)
