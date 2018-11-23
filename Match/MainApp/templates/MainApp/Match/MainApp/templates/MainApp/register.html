@@ -1,0 +1,107 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+
+    <title> Register </title>
+
+  </head>
+
+  <body class="bg-primary">
+    <div class="container-fluid">
+
+      <div class="row w-50 mx-auto">
+        <div class="col-md border rounded shadow-lg bg-white mt-5">
+          <p class="display-4 text-center mt-4"> Register </small>
+
+          <form id="registerForm" action="/newUser/" method="POST">
+            <div class="form-group">
+              <label for="firstName"> First name: </label>
+              <input type="text" class="form-control" id="firstName" name="firstName" pattern="[A-Z][a-z]{3,19}" >
+              <small class="font-weight-light font-italic"> First name should only contain alphabetic characters </small>
+            </div>
+
+            <div class="form-group">
+              <label for="lastName"> Last name: </label>
+              <input type="text" class="form-control" id="lastName" name="lastName" pattern="[A-Z][a-z]{3,19}"  >
+              <small class="font-weight-light font-italic"> Last name should only contain alphabetic characters </small>
+            </div>
+
+            <div class="form-group">
+              <label for="age"> Age: </label>
+              <input type="text" class="form-control" id="age" name="age" pattern="[0-9]{2}" >
+              <small class="font-weight-light font-italic"> Age should only contain numbers </small>
+            </div>
+
+            <div class="form-group">
+              <label for="dob"> Date of birth: </label>
+              <input type="date" class="form-control" id="dob" name="dob" >
+            </div>
+
+            <div class="form-check-inline mt-2">
+              <label for="gender"> Gender: </label>
+
+              <div class="form-check">
+                <input type="radio" class="form-check-input" id="maleGender" name="gender" value="Male" >
+                <label class="form-check-label" for="male"> Male </label>
+              </div>
+
+              <div class="form-check">
+                <input type="radio" class="form-check-input" id="femaleGender" name="gender" value="Female" >
+                <label class="form-check-label" for="female"> Female </label>
+              </div>
+            </div>
+
+            <div class="form-group mt-2">
+              <label for="email"> Email address: </label>
+              <input type="email" class="form-control" id="email" name="email" pattern="[a-zA-Z0-9.]+@[a-zA-Z0-9.]+\.[a-zA-Z]{2,}" >
+              <small class="font-weight-light font-italic"> E-mail should only contain alphanumerical characters </small>
+          </div>
+
+            <div class="form-group">
+              <label for="pwd"> Password: </label>
+              <input type="password" class="form-control" id="pwd" name="pwd" pattern=".[a-zA-Z0-9]{5,}" required>
+              <small class="font-weight-light font-italic"> Password should only contain minimum 5 alphanumerical characters ( _ and @ allowed ) </small>
+            </div>
+
+            <div class="form-group">
+              <label for="profilePic"> Profile picture: </label>
+              <div class="custom-file mb-3">
+                <input type="file" class="custom-file-input" id="profilePic" name="profilePic">
+                <label class="custom-file-label" for="profilePic"> Choose file </label>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="hobbies"> Select hobbies: </label>
+              <div class="form-check">
+                {% for hobby in hobbyList %}
+                  <p> <input type="checkbox" class="form-check-input" id="{{ hobby.hobbyName }}" name="hobby" value="{{ hobby.hobbyName }}"> {{ hobby.hobbyName }} - {{ hobby.hobbyInfo }} </p>
+                {% endfor %}
+              </div>
+            </div>
+
+            <div class="float-right d-flex justify-content-around mb-4">
+              <input type="submit" class="btn btn-success btn-md" value="Register" id="register">
+            </div>
+          </form>
+        </div>
+      </div>
+      <br>
+      <br>
+    </div>
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- Bootstrap JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <!-- Custom jQuery -->
+    <script type="text/javascript" src="{% static 'MainApp/script.js' %}"></script>
+  </body>
+</html>
