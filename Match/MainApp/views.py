@@ -21,7 +21,7 @@ def login(req):
 
             return render(req, 'MainApp/index.html', { 'errorMsg': errorMsg })
         else:
-            return render(req, 'MainApp/profile.html', { 'user': user })
+            return render(req, 'MainApp/profile.html', { 'user': user[0] })
     else:
         raise Http404('Something went wrong !')
 
