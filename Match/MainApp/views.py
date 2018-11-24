@@ -57,6 +57,12 @@ def newUser(req):
             user = User(firstName=firstName, lastName=lastName, age=age, dob=dob, gender=gender, email=email, password=password, profilePic=profilePic)
             user.save()
 
+            #adding hobbies to user
+                for hobbyName in hobbies:
+                    hobby = Hobby.objects.get(pk=hobbyName)
+                    user.hobbies.add(hobby)
+
+
             return render(req, 'MainApp/index.html', {})
         else:
             #checking if user exists
