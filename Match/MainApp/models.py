@@ -6,12 +6,12 @@ class Hobby(models.Model):
     hobbyInfo = models.TextField(max_length=3000)
 
 class User(models.Model):
-    firstName = models.CharField(max_length=10)
-    lastName = models.CharField(max_length=10)
+    firstName = models.CharField(max_length=20)
+    lastName = models.CharField(max_length=20)
     age = models.IntegerField()
     dob = models.DateField()
-    gender = models.CharField(max_length=8)
-    email = models.CharField(max_length=20)
-    password = models.CharField(max_length=20)
-    profilePic = models.ImageField(upload_to='profile_images')
+    gender = models.CharField(max_length=10)
+    email = models.CharField(max_length=50)
+    password = models.CharField(max_length=50)
+    profilePic = models.ImageField()
     hobbies = models.ManyToManyField(Hobby)

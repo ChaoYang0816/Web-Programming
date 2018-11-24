@@ -1,3 +1,5 @@
+{% load staticfiles %}
+
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
@@ -10,37 +12,42 @@
     <title> Profile </title>
   </head>
   <body>
-    <div class="container-fluid">
-      <div class="row mh-100">
-        <div class="col-md-3 bg-secondary">
-          <img src="" class="mx-auto d-block img-thumbnail img-fluid" alt="Profile-Pic">
-          <br><br>
-          <p class="text-white"> General info </p>
-          <ul>
-            <li>FirstName:{{user.firstName}} </li>
-            <li>LastName:{{user.lastName}} </li>
-            <li>Age{{user.age}}</li>
-            <li>Date of birth:{{user.dob}}</li>
-            <li>Gender:{{user.gender}}</li>
-            <li>Email:{{user.email}}</li>
+    <div class="container-fluid h-100">
+      <div class="row h-100">
+        <div class="col-md-4 bg-secondary h-100">
+          <img src="{% static 'MainApp/user.profilePic' %}" class="mx-auto d-block img-thumbnail img-fluid" alt="{{ user.profilePic }}">
+          <br>
+          <br>
+          <h3 class="text-white"> General info </h3>
+          <br>
+          <ul style="list-style-type:none">
+            <li class="text-white"> <h5> FirstName: {{ user.firstName }} <h5> </li> <br>
+            <li class="text-white"> <h5> LastName: {{ user.lastName }} <h5> </li> <br>
+            <li class="text-white"> <h5> Age: {{ user.age }} <h5> </li> <br>
+            <li class="text-white"> <h5> Date of birth: {{ user.dob }} <h5> </li> <br>
+            <li class="text-white"> <h5> Gender: {{ user.gender }} <h5> </li> <br>
+            <li class="text-white"> <h5> Email: {{ user.email }} <h5> </li> <br>
           </ul>
-          <br><br>
+          <br>
+          <br>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-3">
           <br>
-        <ul id= 'hobbyList'>
-          {% for hobbies in user.hobbies.all%}
-          <li>{{hobbies.hobbyName}}</li>
-          {% endfor %}
-        </ul>
-
-          <br><br>
+          <h3> My hobbies </h3>
+          <br>
+          <ul id= 'hobbyList' style="list-style-type:none">
+            {% for hobbies in user.hobbies.all %}
+            <li> <h5> {{ hobbies.hobbyName }} </h5> </li> <br>
+            {% endfor %}
+          </ul>
+          <br>
+          <br>
         </div>
 
         <div class="col-md-5">
           <br>
-          <p> Users with matching hobbies </p>
+          <h3> My hobbies </h3>
 
           <ul>
             <li> Hobby 1</li>

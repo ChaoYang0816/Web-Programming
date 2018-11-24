@@ -14,13 +14,15 @@
   <body class="bg-danger">
     <div class="container-fluid">
       <br><br>
-      <br><br>
+      {% if errorMsg != "" %}
+        <h2 class="text-center text-white"> {{ errorMsg }} </h2>
+      {% endif %}
       <br><br>
       <div class="row w-25 mx-auto">
         <div class="col-md border border-info rounded shadow-lg bg-white">
           <p class="display-4 text-center mt-4"> Log In  </p>
 
-          <form id='loginForm' action="/log/" method="GET">
+          <form id='loginForm' action="/login/" method="POST">
             <div class="form-group">
               <label for="email"> Email address: </label>
               <input type="email" class="form-control" id="email" name="email" required>
