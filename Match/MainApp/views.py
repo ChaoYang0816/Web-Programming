@@ -21,7 +21,6 @@ def login(req):
 
             return render(req, 'MainApp/index.html', { 'errorMsg': errorMsg })
         else:
-            print(user[0])
             return render(req, 'MainApp/profile.html', { 'user': user[0] })
     else:
         raise Http404('Something went wrong !')
@@ -57,10 +56,6 @@ def newUser(req):
             #creating a new user to be saved into the DB
             user = User(firstName=firstName, lastName=lastName, age=age, dob=dob, gender=gender, email=email, password=password, profilePic=profilePic)
             user.save()
-            
-            for hobbyName in hobbies:
-                hobby = Hobby.objects.get(pk=hobbyName)
-                user.hobbies.add(hobby)
 
             return render(req, 'MainApp/index.html', {})
         else:
