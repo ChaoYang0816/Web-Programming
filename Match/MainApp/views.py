@@ -58,9 +58,9 @@ def newUser(req):
             user.save()
 
             #adding hobbies to user
-                for hobbyName in hobbies:
-                    hobby = Hobby.objects.get(pk=hobbyName)
-                    user.hobbies.add(hobby)
+            for hobbyName in hobbies:
+                hobby = Hobby.objects.get(pk=hobbyName)
+                user.hobbies.add(hobby)
 
 
             return render(req, 'MainApp/index.html', {})
