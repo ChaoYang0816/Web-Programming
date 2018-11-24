@@ -16,12 +16,14 @@ def login(req):
 
         user = User.objects.filter(email=email, password=pwd)
 
+        users = User.objects.all().values('firstName', 'lastName')
+
         if len(user) == 0:
             errorMsg = "User does not exist"
 
             return render(req, 'MainApp/index.html', { 'errorMsg': errorMsg })
         else:
-            return render(req, 'MainApp/profile.html', { 'user': user[0] })
+            return render(req, 'MainApp/profile.html', { 'user': user[0], 'users': users })
     else:
         raise Http404('Something went wrong !')
 
@@ -57,11 +59,10 @@ def newUser(req):
             user = User(firstName=firstName, lastName=lastName, age=age, dob=dob, gender=gender, email=email, password=password, profilePic=profilePic)
             user.save()
 
-            #adding hobbies to user 
+            #adding hobbies to user
             for hobbyName in hobbies:
                 hobby = Hobby.objects.get(pk=hobbyName)
                 user.hobbies.add(hobby)
-
 
             return render(req, 'MainApp/index.html', {})
         else:
