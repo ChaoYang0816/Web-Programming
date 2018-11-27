@@ -3,6 +3,7 @@ from django.http import HttpResponse, Http404, JsonResponse, QueryDict
 from django.views.decorators.csrf import csrf_exempt
 from .models import User
 from .models import Hobby
+from operator import attrgetter
 
 # Render the log in page
 def index(req):
@@ -23,7 +24,9 @@ def login(req):
 
             return render(req, 'MainApp/index.html', { 'errorMsg': errorMsg })
         else:
-            return render(req, 'MainApp/profile.html', { 'user': user[0], 'users': users })
+            list = sort(user, users)
+
+            return render(req, 'MainApp/profile.html', { 'user': user[0], 'users': list })
     else:
         raise Http404('Something went wrong !')
 
@@ -93,3 +96,20 @@ def newUser(req):
                 return render(req, 'MainApp/index.html', {})
     else:
         raise Http404('Something went wrong !')
+
+def sort(user, users):
+    hobbies = user[0].hobbies.all()
+    i = 0
+    for u in users:
+        k = 0
+        h = u.hobbies.all()
+        for hobby in hobbies:
+            if hobby in h:
+                k += 1
+        users[i].hobbyCount = k
+        print(users[i].hobbyCount)
+        i += 1
+
+    list = sorted(users, key=attrgetter('hobbyCount'), reverse=True)
+
+    return list
