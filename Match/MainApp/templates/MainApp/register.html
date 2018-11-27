@@ -23,7 +23,7 @@
         <div class="col-md border rounded shadow-lg bg-white mt-5">
           <p class="display-4 text-center mt-4"> Register </small>
 
-          <form id="registerForm" action="/newUser/" method="POST">
+          <form id="registerForm" action="/newUser/" method="POST" enctype="multipart/form-data">
             <div class="form-group">
               <label for="firstName"> First name: </label>
               <input type="text" class="form-control" id="firstName" name="firstName" pattern="[A-Z][a-z]{3,19}" >
