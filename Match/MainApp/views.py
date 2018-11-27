@@ -46,7 +46,7 @@ def newUser(req):
         gender = req.POST.get('gender')
         email = req.POST['email']
         password = req.POST['pwd']
-        profilePic = req.POST['profilePic']
+        profilePic = req.FILES['profilePic']
         hobbies = req.POST.getlist('hobby')
 
         #variable to validate email and password

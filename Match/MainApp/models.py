@@ -13,5 +13,5 @@ class User(models.Model):
     gender = models.CharField(max_length=10)
     email = models.CharField(max_length=50)
     password = models.CharField(max_length=50)
-    profilePic = models.ImageField()
+    profilePic = models.ImageField(upload_to="profile_images", blank=True)
     hobbies = models.ManyToManyField(Hobby)
