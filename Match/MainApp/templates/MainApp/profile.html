@@ -60,19 +60,20 @@
           <br>
           <div class="group-vertical">
             {% for u in users %}
-              {% if u.firstName != user.firstName and u.lastName != user.lastName %}
+              <!--{% if u.firstName != user.firstName and u.lastName != user.lastName %}-->
                 <div class="group">
                   <button type="button" class="btn btn-primary dropdown-toggle w-50" data-toggle="dropdown">
                     {{ u.firstName }} {{ u.lastName }}
                   </button>
                   <button type="button" class="btn btn-danger w-25 ml-3"> Send like </button>
                   <div class="dropdown-menu w-50">
-                    <a class="dropdown-item text-center" href="#"> Hobby 1 </a>
-                    <a class="dropdown-item text-center" href="#"> Hobby 2 </a>
+                    {% for hobby in u.hobbies.all %}
+                    <a class="dropdown-item text-center" href="#"> {{ hobby.hobbyName }} </a>
+                    {% endfor %}
                   </div>
                 </div>
                 <br>
-              {% endif %}
+              <!--{% endif %}-->
             {% endfor %}
           </div>
         </div>
