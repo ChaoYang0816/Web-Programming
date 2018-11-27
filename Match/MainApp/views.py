@@ -16,7 +16,7 @@ def login(req):
 
         user = User.objects.filter(email=email, password=pwd)
 
-        users = User.objects.all().values('firstName', 'lastName')
+        users = User.objects.exclude(email=email)
 
         if len(user) == 0:
             errorMsg = "User does not exist"
