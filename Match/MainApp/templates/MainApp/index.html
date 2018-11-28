@@ -14,7 +14,7 @@
 
     <title> Log in </title>
   </head>
-  <body class="bg-danger">
+  <body class="view" style="background-image: url('https://images.unsplash.com/photo-1516620199567-9f8b632743b6?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=9c883b3a18696e63f9cf93de66ccf51a&auto=format&fit=crop&w=1936&q=80'); background-repeat: no-repeat; background-size: cover; background-position: center center;">
     <div class="container-fluid">
       <br><br>
       {% if errorMsg != "" %}
@@ -27,10 +27,12 @@
 
           <form id='loginForm' action="/login/" method="POST">
             <div class="form-group">
+            <i class="fa fa-user prefix white-text active"></i>
               <label for="email"> Email address: </label>
               <input type="email" class="form-control" id="email" name="email" required>
             </div>
             <div class="form-group">
+            <i class="fa fa-lock prefix white-text active"></i>
               <label for="pwd"> Password: </label>
               <input type="password" class="form-control" id="pwd" name="pwd" required>
             </div>
