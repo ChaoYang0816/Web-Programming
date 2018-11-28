@@ -1,15 +1,17 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
+from django.utils import timezone
 from django.http import HttpResponse, Http404, JsonResponse, QueryDict
 from django.views.decorators.csrf import csrf_exempt
 from .models import User
 from .models import Hobby
 from operator import attrgetter
 
+import datetime as D
+
 # Render the log in page
 def index(req):
     return render(req, 'MainApp/index.html', {})
 
-@csrf_exempt
 def login(req):
     if req.method == 'POST':
         email = req.POST['email']
@@ -26,11 +28,21 @@ def login(req):
         else:
             list = sort(user, users)
 
-            return render(req, 'MainApp/profile.html', { 'user': user[0], 'users': list })
+            req.session['email'] = email
+            req.session['pwd'] = pwd
+            response = render(req, 'MainApp/profile.html', { 'user': user[0], 'users': list })
+            now = D.datetime.utcnow()
+            max_age = 365 * 24 * 60 * 60  #one year
+            delta = now + D.timedelta(seconds=max_age)
+            format = "%a, %d-%b-%Y %H:%M:%S GMT"
+            expires = D.datetime.strftime(delta, format)
+            response.set_cookie('last_login',now,expires=expires)
+
+            return response
     else:
         raise Http404('Something went wrong !')
 
-@csrf_exempt
+#@csrf_exempt
 def register(req):
     if req.method == 'GET':
         hobbyList = Hobby.objects.all().values('hobbyName', 'hobbyInfo')
@@ -39,7 +51,7 @@ def register(req):
     else:
         raise Http404("Something went wrong !", {})
 
-@csrf_exempt
+#@csrf_exempt
 def newUser(req):
     if req.method == 'POST':
         firstName = req.POST['firstName']

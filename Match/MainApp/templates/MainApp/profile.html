@@ -16,7 +16,7 @@
   </head>
   <body>
     <div class="container-fluid h-100">
-      <div class="row">
+      <div class="row mb-2">
         <div class="col-md-10 w-100">
           <h1 class="display-3 ml-3"> MatchApp </h1>
         </div>
@@ -24,39 +24,54 @@
           <a class="btn btn-success btn-lg float-right mt-3 mr-3 p-3" href="{% url 'index' %}"> Log out </a>
         </div>
       </div>
-      <div class="row h-100">
-        <div class="col-md-4 bg-secondary h-100">
-          <img src="{{ user.profilePic.url }}" class="mx-auto d-block img-thumbnail img-fluid" alt="IMAGE NOT FOUND">
+      <div class="row">
+        <div class="col-md-3 bg-secondary">
+          <img src="{{ user.profilePic.url }}" class="mt-2 mx-auto d-block img-thumbnail img-fluid" alt="IMAGE NOT FOUND">
           <br>
+          <h2> <span class="badge badge-dark"> Personal info </span> </h2>
           <br>
-          <h3 class="text-white"> General info </h3>
+          <div>
+              <h4> <span class="badge badge-light"> First name: </span> <small class="text-white"> {{ user.firstName }} </small> </h4>
+          </div>
           <br>
-          <ul style="list-style-type:none">
-            <li class="text-white"> <h5> First name: {{ user.firstName }} <h5> </li> <br>
-            <li class="text-white"> <h5> Last name: {{ user.lastName }} <h5> </li> <br>
-            <li class="text-white"> <h5> Age: {{ user.age }} <h5> </li> <br>
-            <li class="text-white"> <h5> Date of birth: {{ user.dob }} <h5> </li> <br>
-            <li class="text-white"> <h5> Gender: {{ user.gender }} <h5> </li> <br>
-            <li class="text-white"> <h5> Email: {{ user.email }} <h5> </li> <br>
-          </ul>
+          <div>
+            <h4> <span class="badge badge-light"> Last name: </span> <small class="text-white"> {{ user.lastName }} </small> </h4>
+          </div>
           <br>
+          <div>
+            <h4> <span class="badge badge-light"> Age: </span> <small class="text-white"> {{ user.age }} </small> </h4>
+          </div>
+          <br>
+          <div>
+            <h4> <span class="badge badge-light"> Date of birth: </span> <small class="text-white"> {{ user.dob }} </small> </h4>
+          </div>
+          <br>
+          <div>
+            <h4> <span class="badge badge-light"> Gender: </span> <small class="text-white"> {{ user.gender }} </small> </h4>
+          </div>
+          <br>
+          <div>
+            <h4> <span class="badge badge-light"> Email: </span> <small class="text-white"> {{ user.email }} </small> </h4>
+          </div>
+          <div class="group mt-5">
+            <button type="button" class="btn btn-primary dropdown-toggle w-100" data-toggle="dropdown">
+              My hobbies
+            </button>
+            <div class="dropdown-menu w-100">
+              {% for hobby in user.hobbies.all %}
+              <a class="dropdown-item text-center" href="#"> {{ hobby.hobbyName }} </a>
+              {% endfor %}
+            </div>
+          </div>
           <br>
         </div>
 
-        <div class="col-md-3">
-          <h3> My hobbies </h3>
-          <br>
-          <ul id= 'hobbyList' style="list-style-type:none">
-            {% for hobbies in user.hobbies.all %}
-            <li> <h5> {{ hobbies.hobbyName }} </h5> </li> <br>
-            {% endfor %}
-          </ul>
-          <br>
-          <br>
+        <div class="col-md-5 border border-dark border-bottom-0 border-right-0">
+          <h2> <span class="badge badge-dark mt-3"> Posts </span> </h2>
         </div>
 
-        <div class="col-md-5">
-          <h3> Suggested users </h3>
+        <div class="col-md-4 border border-dark border-bottom-0 border-right-0">
+          <h2> <span class="badge badge-dark mt-3"> Suggested users </span> </h2>
           <br>
           <div class="group-vertical">
             {% for u in users %}
