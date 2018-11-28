@@ -26,6 +26,7 @@
           <p class="display-4 text-center mt-4"> Log In  </p>
 
           <form id='loginForm' action="/login/" method="POST">
+            {% csrf_token %}
             <div class="form-group">
             <i class="fa fa-user prefix white-text active"></i>
               <label for="email"> Email address: </label>
