@@ -12,6 +12,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 
+    <!-- Title in the browser tab -->
     <title> Profile </title>
   </head>
   <body>
@@ -20,14 +21,17 @@
         <div class="col-md-10 w-100">
           <h1 class="display-3 ml-3"> MatchApp </h1>
         </div>
+        <!-- Logout -->
         <div class="col-md-2 w-100 p-0">
-          <a class="btn btn-success btn-lg float-right mt-3 mr-3 p-3" href="{% url 'index' %}"> Log out </a>
+          <a class="btn btn-success btn-lg float-right mt-3 mr-3 p-3" href="{% url 'logout' %}"> Log out </a>
         </div>
       </div>
       <div class="row">
         <div class="col-md-3 bg-secondary">
+          <!-- Profile picture -->
           <img src="{{ user.profilePic.url }}" class="mt-2 mx-auto d-block img-thumbnail img-fluid" alt="IMAGE NOT FOUND">
           <br>
+          <!-- User personal information -->
           <h2> <span class="badge badge-dark"> Personal info </span> </h2>
           <br>
           <div>
@@ -53,6 +57,7 @@
           <div>
             <h4> <span class="badge badge-light"> Email: </span> <small class="text-white"> {{ user.email }} </small> </h4>
           </div>
+          <!-- User hobbies list -->
           <div class="group mt-5">
             <button type="button" class="btn btn-primary dropdown-toggle w-100" data-toggle="dropdown">
               My hobbies
@@ -65,17 +70,17 @@
           </div>
           <br>
         </div>
-
+        <!-- Notification section -->
         <div class="col-md-5 border border-dark border-bottom-0 border-right-0">
           <h2> <span class="badge badge-dark mt-3"> Posts </span> </h2>
         </div>
-
+        <!-- Suggested user section -->
         <div class="col-md-4 border border-dark border-bottom-0 border-right-0">
           <h2> <span class="badge badge-dark mt-3"> Suggested users </span> </h2>
           <br>
           <div class="group-vertical">
             {% for u in users %}
-              <!--{% if u.firstName != user.firstName and u.lastName != user.lastName %}-->
+              <!-- Dropdown button with suggested users' hobbies -->
                 <div class="group">
                   <button type="button" class="btn btn-primary dropdown-toggle w-50" data-toggle="dropdown">
                     {{ u.firstName }} {{ u.lastName }}
@@ -88,7 +93,6 @@
                   </div>
                 </div>
                 <br>
-              <!--{% endif %}-->
             {% endfor %}
           </div>
         </div>

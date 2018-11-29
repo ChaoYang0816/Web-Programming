@@ -12,11 +12,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 
+    <!-- Title in the browser tab -->
     <title> Log in </title>
   </head>
+
   <body class="view" style="background-image: url('https://images.unsplash.com/photo-1516620199567-9f8b632743b6?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=9c883b3a18696e63f9cf93de66ccf51a&auto=format&fit=crop&w=1936&q=80'); background-repeat: no-repeat; background-size: cover; background-position: center center;">
     <div class="container-fluid">
       <br><br>
+      <!-- Generating error messages in case of user information processing errors -->
       {% if errorMsg != "" %}
         <h2 class="text-center text-white"> {{ errorMsg }} </h2>
       {% endif %}
@@ -24,8 +27,8 @@
       <div class="row w-25 mx-auto">
         <div class="col-md border border-info rounded shadow-lg bg-white">
           <p class="display-4 text-center mt-4"> Log In  </p>
-
-          <form id='loginForm' action="/login/" method="POST">
+          <!-- Login form -->
+          <form id='loginForm' action="{% url 'login' %}" method="POST">
             {% csrf_token %}
             <div class="form-group">
             <i class="fa fa-user prefix white-text active"></i>
@@ -44,21 +47,12 @@
             </div>
             <br>
           </form>
-
+            <!-- Register page link -->
             <div class="float-right mb-3">
               <button class="btn btn-link" id="btnRegister"> <a href="{% url 'register' %}"> Register  </a></button>
             </div>
-
-
         </div>
       </div>
     </div>
-
-    <!-- jQuery library -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <!-- Bootstrap JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
-    <!-- Custom jQuery -->
-    <script type="text/javascript" src="{% static 'MainApp/script.js' %}"></script>
   </body>
 </html>

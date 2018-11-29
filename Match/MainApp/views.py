@@ -12,13 +12,16 @@ import datetime as D
 def index(req):
     return render(req, 'MainApp/index.html', {})
 
+# Access the profile page
 def login(req):
     if req.method == 'POST':
         email = req.POST['email']
         pwd = req.POST['pwd']
 
+        # Find user by email and password
         user = User.objects.filter(email=email, password=pwd)
 
+        # Find all users but not the logging user
         users = User.objects.exclude(email=email)
 
         if len(user) == 0:
@@ -28,19 +31,39 @@ def login(req):
         else:
             list = sort(user, users)
 
+            # Setting the sessions
             req.session['email'] = email
             req.session['pwd'] = pwd
+
             response = render(req, 'MainApp/profile.html', { 'user': user[0], 'users': list })
+
+            # Setting the cookies
             now = D.datetime.utcnow()
             max_age = 365 * 24 * 60 * 60  #one year
             delta = now + D.timedelta(seconds=max_age)
             format = "%a, %d-%b-%Y %H:%M:%S GMT"
             expires = D.datetime.strftime(delta, format)
-            response.set_cookie('last_login',now,expires=expires)
+            response.set_cookie('last_login', now, expires=expires)
 
             return response
     else:
         raise Http404('Something went wrong !')
+
+# Logging out from the profile page
+def logout(req):
+    # Check if sessions still available
+    if 'email' in req.session:
+        print("Session still stored !")
+
+        # Flushing the session variables
+        req.session.flush()
+
+        if not 'email' in req.session:
+            print("Your session is deleted")
+        else:
+            print("Session still valid")
+
+    return render(req, 'MainApp/index.html', {})
 
 #@csrf_exempt
 def register(req):
@@ -64,24 +87,24 @@ def newUser(req):
         profilePic = req.FILES['profilePic']
         hobbies = req.POST.getlist('hobby')
 
-        #variable to validate email and password
+        # Variable to validate email and password
         taken = False
 
         users = User.objects.filter(email=email, password=password)
 
         if len(users) == 0:
-            #creating a new user to be saved into the DB
+            # Creating a new user to be saved into the DB
             user = User(firstName=firstName, lastName=lastName, age=age, dob=dob, gender=gender, email=email, password=password, profilePic=profilePic)
             user.save()
 
-            #adding hobbies to user
+            # Adding hobbies to user
             for hobbyName in hobbies:
                 hobby = Hobby.objects.get(pk=hobbyName)
                 user.hobbies.add(hobby)
 
             return render(req, 'MainApp/index.html', {})
         else:
-            #checking if user exists
+            # Checking if user exists
             for i in range(len(users)):
                 if (users[i].email == email) or (users[i].password == password):
                     taken = True
@@ -90,17 +113,17 @@ def newUser(req):
                 else:
                     taken = False
 
-            #generating error message
+            # Generating error message
             if taken:
                 errorMsg = "E-mail and password are already taken"
 
                 return render(req, 'MainApp/index.html', { 'errorMsg': errorMsg })
             else:
-                #creating a new user to be saved into the DB
+                # Creating a new user to be saved into the DB
                 user = User(firstName=firstName, lastName=lastName, age=age, dob=dob, gender=gender, email=email, password=password, profilePic=profilePic)
                 user.save()
 
-                #adding hobbies to user
+                # Adding hobbies to user
                 for hobbyName in hobbies:
                     hobby = Hobby.objects.get(pk=hobbyName)
                     user.hobbies.add(hobby)
@@ -109,6 +132,7 @@ def newUser(req):
     else:
         raise Http404('Something went wrong !')
 
+# Method to sort the users from most to least matching hobby
 def sort(user, users):
     hobbies = user[0].hobbies.all()
     i = 0
@@ -119,7 +143,7 @@ def sort(user, users):
             if hobby in h:
                 k += 1
         users[i].hobbyCount = k
-        print(users[i].hobbyCount)
+        #print(users[i].hobbyCount)
         i += 1
 
     list = sorted(users, key=attrgetter('hobbyCount'), reverse=True)
