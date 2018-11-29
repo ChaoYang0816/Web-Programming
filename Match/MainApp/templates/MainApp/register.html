@@ -24,7 +24,7 @@
           <!-- Register form -->
           <form id="registerForm" action="{% url 'newUser' %}" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            <!-- First name -->
+             <!-- First name -->
             <div class="form-group">
               <label for="firstName"> First name: </label>
               <input type="text" class="form-control" id="firstName" name="firstName" pattern="[A-Z][a-z]{3,19}" >

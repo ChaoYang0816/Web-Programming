@@ -11,15 +11,15 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
-
     <!-- Title in the browser tab -->
     <title> Profile </title>
   </head>
+
   <body>
     <div class="container-fluid h-100">
       <div class="row mb-2">
         <div class="col-md-10 w-100">
-          <h1 class="display-3 ml-3"> MatchApp </h1>
+          <h1 class="display-3 ml-3"> The Match App </h1>
         </div>
         <!-- Logout -->
         <div class="col-md-2 w-100 p-0">
@@ -32,7 +32,7 @@
           <img src="{{ user.profilePic.url }}" class="mt-2 mx-auto d-block img-thumbnail img-fluid" alt="IMAGE NOT FOUND">
           <br>
           <!-- User personal information -->
-          <h2> <span class="badge badge-dark"> Personal info </span> </h2>
+          <h2> <span class="badge badge-dark"> Personal Details </span> </h2>
           <br>
           <div>
               <h4> <span class="badge badge-light"> First name: </span> <small class="text-white"> {{ user.firstName }} </small> </h4>
@@ -47,8 +47,8 @@
           </div>
           <br>
           <div>
-            <h4> <span class="badge badge-light"> Date of birth: </span> <small class="text-white"> {{ user.dob }} </small> </h4>
-          </div>
+              <h4> <span class="badge badge-light"> Date of birth: </span> <small class="text-white"> {{ user.dob }} </small> </h4>
+            </div>
           <br>
           <div>
             <h4> <span class="badge badge-light"> Gender: </span> <small class="text-white"> {{ user.gender }} </small> </h4>
@@ -57,7 +57,7 @@
           <div>
             <h4> <span class="badge badge-light"> Email: </span> <small class="text-white"> {{ user.email }} </small> </h4>
           </div>
-          <!-- User hobbies list -->
+           <!-- User's hobby list -->
           <div class="group mt-5">
             <button type="button" class="btn btn-primary dropdown-toggle w-100" data-toggle="dropdown">
               My hobbies
@@ -75,7 +75,7 @@
           <h2> <span class="badge badge-dark mt-3"> Posts </span> </h2>
         </div>
         <!-- Suggested user section -->
-        <div class="col-md-4 border border-dark border-bottom-0 border-right-0">
+         <div class="col-md-4 border border-dark border-bottom-0 border-right-0">
           <h2> <span class="badge badge-dark mt-3"> Suggested users </span> </h2>
           <br>
           <div class="group-vertical">
@@ -85,7 +85,12 @@
                   <button type="button" class="btn btn-primary dropdown-toggle w-50" data-toggle="dropdown">
                     {{ u.firstName }} {{ u.lastName }}
                   </button>
-                  <button type="button" class="btn btn-danger w-25 ml-3"> Send like </button>
+                  {% if u.email in likes %}
+                  <button type="button" class="btn btn-danger w-25 ml-3" id="{{ u.email }}" disabled> Send like </button>
+                  {% else %}
+                  <button type="button" class="btn btn-danger w-25 ml-3" id="{{ u.email }}"> Send like </button>
+                  {% endif %}
+
                   <div class="dropdown-menu w-50">
                     {% for hobby in u.hobbies.all %}
                     <a class="dropdown-item text-center" href="#"> {{ hobby.hobbyName }} </a>
@@ -98,5 +103,43 @@
         </div>
       </div>
     </div>
+
+    <!-- AJAX -->
+    <script type='text/javascript'>
+
+      $(document).ready(function() {
+
+        $('button').click(function() {
+
+          if($(this).attr('id')){
+
+          var from = "{{ user.email }}";
+          var to = $(this).attr('id');
+
+          $.ajax({
+            url: '/like/',
+            datatype: 'json',
+            type: 'PUT',
+            data: { 'fromUser': from, 'toUser': to },
+            success: function(data){
+
+              disableButton(to)
+            }
+
+
+          });
+          return false;
+        }
+        });
+
+      });
+
+      function disableButton(toUser){
+          var btn = document.getElementById(toUser);
+          btn.disabled = true;
+
+      }
+
+    </script>
   </body>
 </html>
