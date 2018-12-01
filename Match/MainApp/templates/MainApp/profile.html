@@ -86,9 +86,11 @@
                     {{ u.firstName }} {{ u.lastName }}
                   </button>
                   {% if u.email in likes %}
-                  <button type="button" class="btn btn-danger w-25 ml-3" id="{{ u.email }}" disabled> Send like </button>
+                  <button type="button" class="btn btn-danger w-25 ml-3" id="{{ u.email }}" name="like" disabled> Like </button>
+                  -<button type="button" class="btn btn-danger w-25 ml-3" id="{{ u.email }}" name="dislike"> Dislike </button>
                   {% else %}
-                  <button type="button" class="btn btn-danger w-25 ml-3" id="{{ u.email }}"> Send like </button>
+                  <button type="button" class="btn btn-danger w-25 ml-3" id="{{ u.email }}" name="like"> Like </button>
+                  <button type="button" class="btn btn-danger w-25 ml-3" id="{{ u.email }}" name="dislike" disabled> Dislike </button>-
                   {% endif %}
 
                   <div class="dropdown-menu w-50">
@@ -111,33 +113,64 @@
 
         $('button').click(function() {
 
-          if($(this).attr('id')){
+        if($(this).attr('id')){
+
+          var val = $(this).attr('name');
 
           var from = "{{ user.email }}";
           var to = $(this).attr('id');
 
-          $.ajax({
-            url: '/like/',
-            datatype: 'json',
-            type: 'PUT',
-            data: { 'fromUser': from, 'toUser': to },
-            success: function(data){
+          if(val == "like"){
 
-              disableButton(to)
+              $.ajax({
+                  url: '/like/',
+                  datatype: 'json',
+                  type: 'PUT',
+                  data: { 'fromUser': from, 'toUser': to },
+                  success: function(data){
+
+                  disableLikeButton(to)
+                }
+              });
+
+              return false;
             }
 
+            else{
+              $.ajax({
+                  url: '/dislike/',
+                  datatype: 'json',
+                  type: 'PUT',
+                  data: { 'fromUser': from, 'toUser': to },
+                  success: function(data){
 
-          });
-          return false;
-        }
+                  enableLikeButton(to)
+                }
+              });
+
+              return false;
+            }
+          }
         });
-
       });
 
-      function disableButton(toUser){
-          var btn = document.getElementById(toUser);
-          btn.disabled = true;
+      function disableLikeButton(toUser){
+          //var btn = document.getElementById(toUser);
+          //btn.disabled = true;
 
+          //Disable like button
+          $("button[id='" + toUser + "']").filter("button[name='like']").prop("disabled", true);
+
+          //Enable dislike button
+          $("button[id='" + toUser + "']").filter("button[name='dislike']").prop("disabled", false) ;
+      }
+
+      function enableLikeButton(toUser){
+          //Enable like button
+          $("button[id='" + toUser + "']").filter("button[name='like']").prop("disabled", false);
+
+          //Disable dislike button
+          $("button[id='" + toUser + "']").filter("button[name='dislike']").prop("disabled", true) ;
       }
 
     </script>

@@ -31,7 +31,7 @@ def login(req):
             list = sort(user, users)
 
             likes = []
-            for like in Like.objects.all():
+            for like in user[0].likes.all():
                 likes.append(like.email)
 
             print(likes)
@@ -174,6 +174,23 @@ def like(request):
         fromUser.likes.add(likedUser)
 
         #print(fromUser.likes.all())
+
+        users = list(User.objects.exclude(email = fromUser.email).values())
+
+        return JsonResponse(users, safe=False)
+    else:
+        raise Http404("Something went wrong!")
+
+@csrf_exempt
+def dislike(request):
+    if request.method == 'PUT':
+        put = QueryDict(request.body)
+        fromU = put.get('fromUser')
+        to = put.get('toUser')
+
+        fromUser = User.objects.get(email = fromU)
+
+        fromUser.likes.get(email = to).delete()
 
         users = list(User.objects.exclude(email = fromUser.email).values())
 
