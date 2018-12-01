@@ -4,6 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from .models import User, Hobby, Like
 from operator import attrgetter
 import datetime as D
+import time
 from django.utils import timezone
 
 
@@ -163,17 +164,15 @@ def like(request):
         fromU = put.get('fromUser')
         to = put.get('toUser')
 
+        t = D.datetime.now(tz=timezone.utc)
+
         fromUser = User.objects.get(email = fromU)
         toUser = User.objects.get(email = to)
 
-        likedUser = Like(fName = toUser.firstName, lName = toUser.lastName, email = toUser.email)
+        likedUser = Like(fName = toUser.firstName, lName = toUser.lastName, email = toUser.email, dtime = t)
         likedUser.save()
 
-        #print(likedUser.fName + likedUser.lName + likedUser.email)
-
         fromUser.likes.add(likedUser)
-
-        #print(fromUser.likes.all())
 
         users = list(User.objects.exclude(email = fromUser.email).values())
 
