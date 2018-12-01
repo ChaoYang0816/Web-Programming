@@ -73,6 +73,17 @@
         <!-- Notification section -->
         <div class="col-md-5 border border-dark border-bottom-0 border-right-0">
           <h2> <span class="badge badge-dark mt-3"> Posts </span> </h2>
+          <div id="postsList" class="mt-3">
+            {% for u in users %}
+              {% for like in u.likes.all %}
+                {% if like.email == user.email %}
+                  <div class="mt-3 bg-warning rounded">
+                    <h4 class="p-1 ml-2"> {{ u.firstName }} {{ u.lastName }} has sent you a like </h4>
+                  </div>
+                {% endif %}
+              {% endfor %}
+            {% endfor %}
+          </div>
         </div>
         <!-- Suggested user section -->
          <div class="col-md-4 border border-dark border-bottom-0 border-right-0">
@@ -86,11 +97,11 @@
                     {{ u.firstName }} {{ u.lastName }}
                   </button>
                   {% if u.email in likes %}
-                  <button type="button" class="btn btn-danger w-25 ml-3" id="{{ u.email }}" name="like" disabled> Like </button>
-                  -<button type="button" class="btn btn-danger w-25 ml-3" id="{{ u.email }}" name="dislike"> Dislike </button>
+                  <button type="button" class="btn btn-danger w-auto ml-3" id="{{ u.email }}" name="like" disabled> Like </button>
+                  <button type="button" class="btn btn-danger w-auto ml-1" id="{{ u.email }}" name="dislike"> Dislike </button>
                   {% else %}
-                  <button type="button" class="btn btn-danger w-25 ml-3" id="{{ u.email }}" name="like"> Like </button>
-                  <button type="button" class="btn btn-danger w-25 ml-3" id="{{ u.email }}" name="dislike" disabled> Dislike </button>-
+                  <button type="button" class="btn btn-danger w-auto ml-3" id="{{ u.email }}" name="like"> Like </button>
+                  <button type="button" class="btn btn-danger w-auto ml-1" id="{{ u.email }}" name="dislike" disabled> Dislike </button>
                   {% endif %}
 
                   <div class="dropdown-menu w-50">
