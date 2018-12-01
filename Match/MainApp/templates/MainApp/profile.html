@@ -99,10 +99,10 @@
                   </button>
                   {% if u.email in likes %}
                   <button type="button" class="btn btn-danger w-auto ml-3" id="{{ u.email }}" name="like" disabled> Like </button>
-                  -<button type="button" class="btn btn-danger w-auto ml-1" id="{{ u.email }}" name="dislike"> Dislike </button>
+                  <button type="button" class="btn btn-danger w-auto ml-1" id="{{ u.email }}" name="dislike"> Dislike </button>
                   {% else %}
                   <button type="button" class="btn btn-danger w-auto ml-3" id="{{ u.email }}" name="like"> Like </button>
-                  <button type="button" class="btn btn-danger w-auto ml-1" id="{{ u.email }}" name="dislike" disabled> Dislike </button>-
+                  <button type="button" class="btn btn-danger w-auto ml-1" id="{{ u.email }}" name="dislike" disabled> Dislike </button>
                   {% endif %}
 
                   <div class="dropdown-menu w-50">
