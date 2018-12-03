@@ -4,6 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from .models import User, Hobby, Like
 from operator import attrgetter
 import datetime as D
+import time
 from django.utils import timezone
 
 
@@ -62,10 +63,6 @@ def logout(req):
     if 'email' in req.session:
         req.session.flush()
         print("Your session is deleted")
-<<<<<<< HEAD
-=======
-
->>>>>>> 2c58802f93abd690d9924c8b7b037f59ae799f75
     return render(req, 'MainApp/index.html', {})
 
 
@@ -162,17 +159,15 @@ def like(request):
         fromU = put.get('fromUser')
         to = put.get('toUser')
 
+        t = D.datetime.now(tz=timezone.utc)
+
         fromUser = User.objects.get(email = fromU)
         toUser = User.objects.get(email = to)
 
-        likedUser = Like(fName = toUser.firstName, lName = toUser.lastName, email = toUser.email)
+        likedUser = Like(fName = toUser.firstName, lName = toUser.lastName, email = toUser.email, dtime = t)
         likedUser.save()
 
-        #print(likedUser.fName + likedUser.lName + likedUser.email)
-
         fromUser.likes.add(likedUser)
-
-        #print(fromUser.likes.all())
 
         users = list(User.objects.exclude(email = fromUser.email).values())
 
@@ -194,5 +189,24 @@ def dislike(request):
         users = list(User.objects.exclude(email = fromUser.email).values())
 
         return JsonResponse(users, safe=False)
+    else:
+        raise Http404("Something went wrong!")
+
+@csrf_exempt
+def checkUser(request):
+    if request.method == 'GET':
+        input = request.GET['input']
+        ans = ""
+
+        check = User.objects.filter(email = input)
+
+        if(len(check) == 0):
+            ans = "Username is valid."
+            print(ans)
+            return JsonResponse(ans, safe=False)
+        else:
+            ans = "Username is already taken."
+            print(ans)
+            return HttpResponse(ans)
     else:
         raise Http404("Something went wrong!")

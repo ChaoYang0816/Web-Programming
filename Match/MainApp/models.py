@@ -12,6 +12,7 @@ class Like(models.Model):
     fName = models.CharField(max_length=20)
     lName = models.CharField(max_length=20)
     email = models.CharField(max_length=50)
+    dtime = models.DateTimeField()
 
 # User model for DB
 class User(models.Model):

@@ -78,7 +78,8 @@
               {% for like in u.likes.all %}
                 {% if like.email == user.email %}
                   <div class="mt-3 bg-warning rounded">
-                    <h4 class="p-1 ml-2"> {{ u.firstName }} {{ u.lastName }} has sent you a like </h4>
+                    <h4 class="p-1 ml-2"> {{ u.firstName }} {{ u.lastName }} sent you a like! </h4>
+                    <p> {{   like.dtime }} </p>
                   </div>
                 {% endif %}
               {% endfor %}
