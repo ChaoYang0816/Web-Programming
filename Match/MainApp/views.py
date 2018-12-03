@@ -61,14 +61,9 @@ def login(req):
 def logout(req):
     # Check if sessions still available
     if 'email' in req.session:
-        print("Session still stored !")
-         # Flushing the session variables
         req.session.flush()
-        if not 'email' in req.session:
-            print("Your session is deleted")
-        else:
-            print("Session still valid")
-        return render(req, 'MainApp/index.html', {})
+        print("Your session is deleted")
+    return render(req, 'MainApp/index.html', {})
 
 
 #@csrf_exempt
