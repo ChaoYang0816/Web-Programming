@@ -152,7 +152,7 @@ def sort(user, users):
 
     return list
 
-@csrf_exempt
+# @csrf_exempt
 def like(request):
     if request.method == 'PUT':
         put = QueryDict(request.body)
@@ -175,7 +175,7 @@ def like(request):
     else:
         raise Http404("Something went wrong!")
 
-@csrf_exempt
+# @csrf_exempt
 def dislike(request):
     if request.method == 'PUT':
         put = QueryDict(request.body)

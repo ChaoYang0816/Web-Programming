@@ -120,6 +120,20 @@
 
     <!-- AJAX -->
     <script type='text/javascript'>
+      function getCookie(c_name) {
+           var cookie = null;
+           //if there is a cookie and it is not empty:
+           if (document.cookie && document.cookie != '') {
+               var cookieQuery = document.cookie.split(';');
+           //Find the cookie by name
+               for (var i = 0; i < cookieQuery.length; i++) {
+                   var cookie = jQuery.trim(cookieQuery[i]);
+                   cookie = decodeURIComponent(cookie.substring(c_name.length + 1));
+                   break;
+               }
+           }
+           return cookie;
+       };
 
       $(document).ready(function() {
 
@@ -132,8 +146,14 @@
           var from = "{{ user.email }}";
           var to = $(this).attr('id');
 
+          $.ajaxSetup({
+              beforeSend:function (xhr,settings) {
+                  xhr.setRequestHeader("X-CSRFtoken",csrftoken)
+              }
+          });
+          var csrftoken = getCookie('csrftoken');
+          
           if(val == "like"){
-
               $.ajax({
                   url: '/like/',
                   datatype: 'json',
@@ -142,13 +162,13 @@
                   success: function(data){
 
                   disableLikeButton(to)
-                }
+                },
               });
 
               return false;
             }
 
-            else{
+          else{
               $.ajax({
                   url: '/dislike/',
                   datatype: 'json',
@@ -157,7 +177,7 @@
                   success: function(data){
 
                   enableLikeButton(to)
-                }
+                },
               });
 
               return false;
