@@ -35,10 +35,6 @@ def login(req):
             for like in user[0].likes.all():
                 likes.append(like.email)
 
-            print(likes)
-
-            #return render(req, 'MainApp/profile.html', { 'user': user[0], 'users': list, 'likes': likes })
-
             # Setting the sessions
             req.session['email'] = email
             req.session['pwd'] = pwd
@@ -66,7 +62,6 @@ def logout(req):
     return render(req, 'MainApp/index.html', {})
 
 
-#@csrf_exempt
 def register(req):
     if req.method == 'GET':
         hobbyList = Hobby.objects.all().values('hobbyName', 'hobbyInfo')
@@ -75,7 +70,6 @@ def register(req):
     else:
         raise Http404("Something went wrong !", {})
 
-#@csrf_exempt
 def newUser(req):
     if req.method == 'POST':
         firstName = req.POST['firstName']
@@ -152,7 +146,6 @@ def sort(user, users):
 
     return list
 
-# @csrf_exempt
 def like(request):
     if request.method == 'PUT':
         put = QueryDict(request.body)
@@ -175,7 +168,6 @@ def like(request):
     else:
         raise Http404("Something went wrong!")
 
-# @csrf_exempt
 def dislike(request):
     if request.method == 'PUT':
         put = QueryDict(request.body)
