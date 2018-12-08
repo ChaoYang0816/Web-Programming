@@ -184,21 +184,21 @@ def dislike(request):
     else:
         raise Http404("Something went wrong!")
 
-@csrf_exempt
-def checkUser(request):
-    if request.method == 'GET':
-        input = request.GET['input']
-        ans = ""
-
-        check = User.objects.filter(email = input)
-
-        if(len(check) == 0):
-            ans = "Username is valid."
-            print(ans)
-            return JsonResponse(ans, safe=False)
-        else:
-            ans = "Username is already taken."
-            print(ans)
-            return HttpResponse(ans)
-    else:
-        raise Http404("Something went wrong!")
+#@csrf_exempt
+#def checkUser(request):
+#    if request.method == 'GET':
+#        input = request.GET['input']
+#        ans = ""
+#
+#        check = User.objects.filter(email = input)
+#
+#        if(len(check) == 0):
+#            ans = "Username is valid."
+#            print(ans)
+#            return JsonResponse(ans, safe=False)
+#        else:
+#            ans = "Username is already taken."
+#            print(ans)
+#            return HttpResponse(ans)
+#    else:
+#        raise Http404("Something went wrong!")

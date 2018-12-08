@@ -150,37 +150,37 @@
                 beforeSend:function (xhr,settings) {
                     xhr.setRequestHeader("X-CSRFtoken",csrftoken);
                 }
-          });
+            });
 
-          var csrftoken = getCookie('csrftoken');
+            var csrftoken = getCookie('csrftoken');
 
-          if(val == "like"){
-              $.ajax({
-                  url: '/like/',
-                  datatype: 'json',
-                  type: 'PUT',
-                  data: { 'fromUser': from, 'toUser': to },
-                  success: function(data){
+            if(val == "like"){
+                $.ajax({
+                    url: '/like/',
+                    datatype: 'json',
+                    type: 'PUT',
+                    data: { 'fromUser': from, 'toUser': to },
+                    success: function(data){
 
-                  disableLikeButton(to);
-                },
-              });
+                        disableLikeButton(to);
+                    }
+                });
 
-              return false;
-          }
-          else{
-              $.ajax({
-                  url: '/dislike/',
-                  datatype: 'json',
-                  type: 'PUT',
-                  data: { 'fromUser': from, 'toUser': to },
-                  success: function(data){
+                return false;
+            }
+            else{
+                $.ajax({
+                    url: '/dislike/',
+                    datatype: 'json',
+                    type: 'PUT',
+                    data: { 'fromUser': from, 'toUser': to },
+                    success: function(data){
 
-                  enableLikeButton(to);
-                },
-              });
+                        enableLikeButton(to);
+                    }
+                });
 
-              return false;
+                return false;
             }
           }
         });
