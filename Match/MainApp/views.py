@@ -7,7 +7,6 @@ import datetime as D
 import time
 from django.utils import timezone
 
-
 # Render the log in page
 def index(req):
     return render(req, 'MainApp/index.html', {})
@@ -127,6 +126,32 @@ def newUser(req):
     else:
         raise Http404('Something went wrong !')
 
+@csrf_exempt
+def sortUserList(req):
+    sortedList = []
+
+    if req.method == 'POST':
+        Age_1 = req.POST['minAge']
+        Age_2 = req.POST['maxAge']
+        gender = req.POST['gender']
+        email = req.POST['email']
+        minAge = int(Age_1)
+        maxAge = int(Age_2)
+
+        user = User.objects.filter(email = email)
+        users = User.objects.filter(gender=gender).exclude(email=email)
+
+        listSort = sort(user, users)
+
+        for u in listSort:
+            if u.age >= minAge and u.age <= maxAge:
+                sortedList.append(u)
+
+        userList = list(sortedList)
+
+        return JsonResponse(userList, safe=False)
+    else:
+        raise Http404("Something went wrong!")
 
 # Method to sort the users from most to least matching hobbies
 def sort(user, users):
@@ -184,21 +209,21 @@ def dislike(request):
     else:
         raise Http404("Something went wrong!")
 
-#@csrf_exempt
-#def checkUser(request):
-#    if request.method == 'GET':
-#        input = request.GET['input']
-#        ans = ""
-#
-#        check = User.objects.filter(email = input)
-#
-#        if(len(check) == 0):
-#            ans = "Username is valid."
-#            print(ans)
-#            return JsonResponse(ans, safe=False)
-#        else:
-#            ans = "Username is already taken."
-#            print(ans)
-#            return HttpResponse(ans)
-#    else:
-#        raise Http404("Something went wrong!")
+@csrf_exempt
+def checkUser(request):
+    if request.method == 'GET':
+        input = request.GET['input']
+        ans = ""
+
+        check = User.objects.filter(email = input)
+
+        if(len(check) == 0):
+            ans = "Username is valid."
+            print(ans)
+            return JsonResponse(ans, safe=False)
+        else:
+            ans = "Username is already taken."
+            print(ans)
+            return HttpResponse(ans)
+    else:
+        raise Http404("Something went wrong!")

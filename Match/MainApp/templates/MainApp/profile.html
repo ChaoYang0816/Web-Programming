@@ -86,26 +86,56 @@
         </div>
         <!-- Suggested user section -->
          <div class="col-md-4 border border-dark border-bottom-0 border-right-0">
+         <div>
+           <!-- Sorting criteria -->
+           <h2> <span class="badge badge-dark mt-3"> Sort </span> </h2>
+           <div class="form-check mt-2">
+             <label for="gender"> Gender: </label>
+
+             <div class="form-check">
+               <input type="radio" class="form-check-input" id="maleGender" name="gender" value="Male">
+               <label class="form-check-label" for="male"> Male </label>
+             </div>
+
+             <div class="form-check">
+               <input type="radio" class="form-check-input" id="femaleGender" name="gender" value="Female">
+               <label class="form-check-label" for="female"> Female </label>
+             </div>
+             <div class="form-group mt-2">
+               <label for="Min age"> Min age: </label>
+               <input type="text" class="form-control" id="minAge" name="minAge" pattern="[0-9]{2}">
+             </div>
+
+             <div class="form-group mt-2">
+               <label for="Max age"> Max age: </label>
+               <input type="text" class="form-control" id="maxAge" name="maxAge" pattern="[0-9]{2}">
+             </div>
+
+             <div class="justify-content-around mb-4">
+               <input type="button" class="btn btn-success btn-md" value="Sort" id="sort">
+             </div>
+           </div>
+         </div>
           <h2> <span class="badge badge-dark mt-3"> Suggested users </span> </h2>
           <br>
           <div class="group-vertical">
             {% for u in users %}
               <!-- Dropdown button with suggested users' hobbies -->
-                <div class="group">
+                <div class="group" id="suggestedUsers">
                   <button type="button" class="btn btn-primary dropdown-toggle w-50" data-toggle="dropdown">
                     {{ u.firstName }} {{ u.lastName }}
                   </button>
                   {% if u.email in likes %}
-                  <button type="button" class="btn btn-danger w-auto ml-3" id="{{ u.email }}" name="like" disabled> Like </button>
-                  <button type="button" class="btn btn-danger w-auto ml-1" id="{{ u.email }}" name="dislike"> Dislike </button>
+                    <button type="button" class="btn btn-danger w-auto ml-3" id="{{ u.email }}" name="like" disabled> Like </button>
+                    <button type="button" class="btn btn-danger w-auto ml-1" id="{{ u.email }}" name="dislike"> Dislike </button>
                   {% else %}
-                  <button type="button" class="btn btn-danger w-auto ml-3" id="{{ u.email }}" name="like"> Like </button>
-                  <button type="button" class="btn btn-danger w-auto ml-1" id="{{ u.email }}" name="dislike" disabled> Dislike </button>
+                    <button type="button" class="btn btn-danger w-auto ml-3" id="{{ u.email }}" name="like"> Like </button>
+                    <button type="button" class="btn btn-danger w-auto ml-1" id="{{ u.email }}" name="dislike" disabled> Dislike </button>
                   {% endif %}
 
                   <div class="dropdown-menu w-50">
                     {% for hobby in u.hobbies.all %}
-                    <a class="dropdown-item text-center" href="#"> {{ hobby.hobbyName }} </a>
+                      <a class="dropdown-item text-center" href="#"> {{ hobby.hobbyName }} </a>
                     {% endfor %}
                   </div>
                 </div>
@@ -162,8 +192,8 @@
                     data: { 'fromUser': from, 'toUser': to },
                     success: function(data){
 
-                        disableLikeButton(to);
-                    }
+                      disableLikeButton(to);
+                  },
                 });
 
                 return false;
@@ -176,13 +206,31 @@
                     data: { 'fromUser': from, 'toUser': to },
                     success: function(data){
 
-                        enableLikeButton(to);
-                    }
+                      enableLikeButton(to);
+                  },
                 });
 
-                return false;
+              return false;
             }
           }
+        });
+
+        // Sort the users on the basis of age and gender
+        $('#sort').click(function() {
+          var minAge = $('#minAge').val();
+          var maxAge = $('#maxAge').val();
+          var gender = $("[name = 'gender']").val();
+
+          $.ajax({
+            url: '/sortUserList/',
+            datatype: 'json',
+            type: 'POST',
+            data: { 'minAge': minAge, 'maxAge': maxAge, 'gender': gender, 'email': "{{ user.email }}" },
+            success: function(users){
+              $('#suggestedUsers').empty();
+              console.log(users);
+            },
+          });
         });
       });
 
@@ -201,7 +249,6 @@
           //Disable dislike button
           $("button[id='" + toUser + "']").filter("button[name='dislike']").prop("disabled", true) ;
       }
-
     </script>
   </body>
 </html>
