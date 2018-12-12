@@ -9,6 +9,6 @@ urlpatterns = [
     path('newUser/', views.newUser, name='newUser'),
     path('like/', views.like, name='like'),
     path('dislike/', views.dislike, name='dislike'),
-    path('checkUser/', views.checkUser, name='checkUser'),
     path('sortUserList/', views.sortUserList, name='sortUserList')
+    #path('checkUser/', views.checkUser, name='checkUser')
 ]

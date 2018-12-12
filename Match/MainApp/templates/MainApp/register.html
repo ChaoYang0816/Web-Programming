@@ -13,8 +13,11 @@
     <title> Register </title>
   </head>
 
-  <body class="bg-primary">
+  <body class="view" style="background-image: url('https://images.unsplash.com/photo-1516620199567-9f8b632743b6?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=9c883b3a18696e63f9cf93de66ccf51a&auto=format&fit=crop&w=1936&q=80'); background-repeat: no-repeat; background-size: cover; background-position: center center;">
     <div class="container-fluid">
+      {% if errorMsg != "" %}
+        <h2 class="text-center text-white"> {{ errorMsg }} </h2>
+      {% endif %}
       <div class="row w-50 mx-auto">
         <div class="col-md border rounded shadow-lg bg-white mt-5">
           <p class="display-4 text-center mt-4"> Register </small>
@@ -74,8 +77,8 @@
             <div class="form-group">
               <label for="profilePic"> Profile picture: </label>
               <div class="custom-file mb-3">
-                <input type="file" class="custom-file-input" id="profilePic" name="profilePic">
-                <label class="custom-file-label" for="profilePic"> Choose file </label>
+                <input type="file" class="custom-file-input" id="profilePic" name="profilePic" oninput="populate()" required>
+                <label class="custom-file-label" for="profilePic" id="pp"> Choose file </label>
               </div>
             </div>
             <!-- List of hobbies -->
@@ -103,5 +106,12 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
     <!-- Custom jQuery -->
     <script type="text/javascript" src="{% static 'MainApp/register.js' %}"></script>
+    <script type='text/javascript'>
+
+      function populate(){
+        var val = $('#profilePic').val();
+        $('#pp').text(val);
+      }
+    </script>
   </body>
 </html>

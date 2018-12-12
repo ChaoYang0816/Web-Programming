@@ -6,6 +6,7 @@ from operator import attrgetter
 import datetime as D
 import time
 from django.utils import timezone
+from django.core import serializers
 
 # Render the log in page
 def index(req):
@@ -18,13 +19,17 @@ def login(req):
         pwd = req.POST['pwd']
 
         # Find user by email and password
-        user = User.objects.filter(email=email, password=pwd)
+        user = User.objects.filter(email=email)
 
         # Find all users except logged in user
         users = User.objects.exclude(email=email)
 
         if len(user) == 0:
             errorMsg = "User does not exist"
+
+            return render(req, 'MainApp/index.html', { 'errorMsg': errorMsg })
+        elif len(user) != 0 and user[0].password != pwd:
+            errorMsg = "Invalid password. Please enter the correct password!"
 
             return render(req, 'MainApp/index.html', { 'errorMsg': errorMsg })
         else:
@@ -81,10 +86,7 @@ def newUser(req):
         profilePic = req.FILES['profilePic']
         hobbies = req.POST.getlist('hobby')
 
-        #Variable to validate email and password
-        taken = False
-
-        users = User.objects.filter(email=email, password=password)
+        users = User.objects.filter(email=email)
 
         if len(users) == 0:
             #Creating a new user to be saved into the DB
@@ -98,58 +100,54 @@ def newUser(req):
 
             return render(req, 'MainApp/index.html', {})
         else:
-            #Checking if user exists
-            for i in range(len(users)):
-                if (users[i].email == email) or (users[i].password == password):
-                    taken = True
+            errorMsg = "This e-mail is taken. Please use a different email."
 
-                    break
-                else:
-                    taken = False
-
-            #Generating error message
-            if taken:
-                errorMsg = "E-mail and password are already taken"
-
-                return render(req, 'MainApp/index.html', { 'errorMsg': errorMsg })
-            else:
-                #Creating a new user to be saved into the DB
-                user = User(firstName=firstName, lastName=lastName, age=age, dob=dob, gender=gender, email=email, password=password, profilePic=profilePic)
-                user.save()
-
-                #Adding hobbies to user
-                for hobbyName in hobbies:
-                    hobby = Hobby.objects.get(pk=hobbyName)
-                    user.hobbies.add(hobby)
-
-                return render(req, 'MainApp/index.html', {})
+            return render(req, 'MainApp/register.html', { 'errorMsg': errorMsg })
     else:
         raise Http404('Something went wrong !')
 
 @csrf_exempt
 def sortUserList(req):
     sortedList = []
-
     if req.method == 'POST':
         Age_1 = req.POST['minAge']
         Age_2 = req.POST['maxAge']
         gender = req.POST['gender']
         email = req.POST['email']
-        minAge = int(Age_1)
-        maxAge = int(Age_2)
-
+        #To check if min and max ages fields used for sort
+        if Age_1 == '':
+            minAge = 0
+        else:
+            minAge = int(Age_1)
+        if Age_2 == '':
+            maxAge = 0
+        else:
+            maxAge = int(Age_2)
         user = User.objects.filter(email = email)
+        #Filters user list by sort gender selected
         users = User.objects.filter(gender=gender).exclude(email=email)
-
         listSort = sort(user, users)
-
-        for u in listSort:
-            if u.age >= minAge and u.age <= maxAge:
-                sortedList.append(u)
-
-        userList = list(sortedList)
-
-        return JsonResponse(userList, safe=False)
+        #If max age input, normal age check
+        if maxAge != 0:
+            #Checks ages of each user in list against sort ages selected
+            for u in listSort:
+                if u.age < minAge or u.age > maxAge:
+                    continue
+                else:
+                    sortedList.append(u)
+            userList = list(sortedList)
+        #If max age not input, only check ages for min age
+        else:
+            #Checks ages of each user in list against sort ages selected
+            for u in listSort:
+                if u.age < minAge:
+                    continue
+                else:
+                    sortedList.append(u)
+            userList = list(sortedList)
+        #print(userList)
+        data = serializers.serialize('json', userList)
+        return JsonResponse(data, safe=False)
     else:
         raise Http404("Something went wrong!")
 
@@ -157,6 +155,7 @@ def sortUserList(req):
 def sort(user, users):
     hobbies = user[0].hobbies.all()
     i = 0
+    #Compares other users' hobbies to logged in user and adds new field 'hobbyCount' with value of similar hobbies
     for u in users:
         k = 0
         h = u.hobbies.all()
@@ -164,13 +163,14 @@ def sort(user, users):
             if hobby in h:
                 k += 1
         users[i].hobbyCount = k
-        #print(users[i].hobbyCount)
         i += 1
 
+    #Sorts user list by newly added field 'hobbyCount'
     list = sorted(users, key=attrgetter('hobbyCount'), reverse=True)
 
     return list
 
+#Method for logged in user to Like any other users
 def like(request):
     if request.method == 'PUT':
         put = QueryDict(request.body)
@@ -185,6 +185,7 @@ def like(request):
         likedUser = Like(fName = toUser.firstName, lName = toUser.lastName, email = toUser.email, dtime = t)
         likedUser.save()
 
+        #Adds liked user's object to logged in user's 'likes' field
         fromUser.likes.add(likedUser)
 
         users = list(User.objects.exclude(email = fromUser.email).values())
@@ -193,6 +194,7 @@ def like(request):
     else:
         raise Http404("Something went wrong!")
 
+#Method for logged in user to Dislike any previously liked users
 def dislike(request):
     if request.method == 'PUT':
         put = QueryDict(request.body)
@@ -201,6 +203,7 @@ def dislike(request):
 
         fromUser = User.objects.get(email = fromU)
 
+        #Deletes disliked user's object from logged in user's 'likes' field
         fromUser.likes.get(email = to).delete()
 
         users = list(User.objects.exclude(email = fromUser.email).values())
@@ -209,21 +212,21 @@ def dislike(request):
     else:
         raise Http404("Something went wrong!")
 
-@csrf_exempt
-def checkUser(request):
-    if request.method == 'GET':
-        input = request.GET['input']
-        ans = ""
-
-        check = User.objects.filter(email = input)
-
-        if(len(check) == 0):
-            ans = "Username is valid."
-            print(ans)
-            return JsonResponse(ans, safe=False)
-        else:
-            ans = "Username is already taken."
-            print(ans)
-            return HttpResponse(ans)
-    else:
-        raise Http404("Something went wrong!")
+#@csrf_exempt
+#def checkUser(request):
+#    if request.method == 'GET':
+#        input = request.GET['input']
+#        ans = ""
+#
+#        check = User.objects.filter(email = input)
+#
+#        if(len(check) == 0):
+#            ans = "Username is valid."
+#            print(ans)
+#            return JsonResponse(ans, safe=False)
+#        else:
+#            ans = "Username is already taken."
+#            print(ans)
+#            return HttpResponse(ans)
+#    else:
+#        raise Http404("Something went wrong!")

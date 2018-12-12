@@ -1,4 +1,4 @@
 # Web-Programming
-Coursework
-Ths will be the GitHub reository for the Web Programming group coursework.
-You get fetch the code and modify it to achieve the requirements in the coursework doc
+Coursework:
+This will be the GitHub repository for the Web Programming Group Coursework.
+You are able to fetch the code and modify it to fulfil the requirements in the coursework document.
