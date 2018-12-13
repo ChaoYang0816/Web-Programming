@@ -225,7 +225,6 @@
             success: function(data){
               $('.group-vertical').empty();
               var users = JSON.parse(data);
-              console.log(users.length)
               var x = '';
               for(var i = 0; i < users.length; i++){
                 var user = users[i];
@@ -248,7 +247,6 @@
                   }
                   x = x + '<div class="dropdown-menu w-50">' + r + '</div></div><br>';
               }
-              console.log(x);
               $('.group-vertical').append(x);
             },
           });
