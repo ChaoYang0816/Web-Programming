@@ -216,15 +216,43 @@
           var minAge = $('#minAge').val();
           var maxAge = $('#maxAge').val();
           var gender = $("[name = 'gender']:checked").val();
-          console.log(gender);
+          var likes = "{{ likes }}";
           $.ajax({
             url: '/sortUserList/',
             datatype: 'json',
             type: 'POST',
             data: { 'minAge': minAge, 'maxAge': maxAge, 'gender': gender, 'email': "{{ user.email }}" },
-            success: function(users){
+            success: function(data){
+              $('.group-vertical').empty();
+              var users = JSON.parse(data);
+              console.log(users.length)
+              var x = '';
+              for(var i = 0; i < users.length; i++){
+                var user = users[i];
+                x = x + '<div class="group" id="suggestedUsers"> <button type="button" class="btn btn-primary dropdown-toggle w-50" data-toggle="dropdown">' + user.fields['firstName'] + ' ' + user.fields['lastName']
+                  + '</button>';
+
+                  if(likes.includes(user.fields['email'])){
+                    x = x + '<button type="button" class="btn btn-danger w-auto ml-3" id="' + user.fields['email'] + '" name="like" disabled> Like </button>'
+                      + '<button type="button" class="btn btn-danger w-auto ml-1" id="' + user.fields['email'] + '" name="dislike"> Dislike </button>';
+                  }
+                  else{
+                    x = x + '<button type="button" class="btn btn-danger w-auto ml-3" id="' + user.fields['email'] + '" name="like"> Like </button>'
+                      + '<button type="button" class="btn btn-danger w-auto ml-1" id="' + user.fields['email'] + '" name="dislike" disabled> Dislike </button>';
+                  }
+
+                  var r = '';
+                  for (var j = 0; j < user.fields['hobbies'].length; j++) {
+                    var hobby = user.fields['hobbies'][j]
+                    var r = r + '<a class="dropdown-item text-center" href="#">' + hobby + '</a>';
+                  }
+                  x = x + '<div class="dropdown-menu w-50">' + r + '</div></div><br>';
+              }
+              console.log(x);
+              $('.group-vertical').append(x);
             },
           });
+          return false;
         });
       });
 
